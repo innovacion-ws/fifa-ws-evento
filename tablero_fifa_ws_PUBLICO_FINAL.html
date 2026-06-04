@@ -1,1 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚽ Ranking FIFA — Evento WS</title>
+<meta name="description" content="Sigue el marcador en tiempo real del Evento Anual FIFA · We Solve">
+<meta property="og:title" content="⚽ Ranking FIFA — Evento WS">
+<meta property="og:description" content="Sigue el marcador en tiempo real · We Solve Evento Anual">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://innovacion-ws.github.io/fifa-ws-evento/tablero_fifa_ws_PUBLICO_FINAL.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="⚽ Ranking FIFA — Evento WS">
+<meta name="twitter:description" content="Sigue el marcador en tiempo real · We Solve Evento Anual">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
 
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--tq:#6FC2BA;--tq2:#18E8C0;--gray:#979998;--mag:#DA80E5;--red:#FF3645;--gold:#FFD700;}
+body{font-family:'Montserrat',sans-serif;min-height:100vh;color:#fff;}
+.ball-deco{position:fixed;font-size:140px;opacity:.04;pointer-events:none;z-index:0;user-select:none;}
+.ball-tl{top:-20px;left:-20px;}.ball-tr{top:-20px;right:-20px;}
+.rank-row{display:grid;grid-template-columns:60px 56px 1fr auto auto;align-items:center;height:58px;border-radius:12px;overflow:hidden;position:relative;cursor:default;animation:fadeIn .4s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.rank-row.row-even{background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.07);}
+.rank-row.row-odd{background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.04);}
+.rank-row.rank-1{background:linear-gradient(90deg,rgba(255,215,0,.22),rgba(255,215,0,.08) 60%,rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.4);box-shadow:0 0 28px rgba(255,215,0,.18);}
+.rank-row.rank-2{background:linear-gradient(90deg,rgba(192,192,192,.18),rgba(192,192,192,.05));border:1px solid rgba(192,192,192,.22);}
+.rank-row.rank-3{background:linear-gradient(90deg,rgba(205,127,50,.18),rgba(205,127,50,.05));border:1px solid rgba(205,127,50,.22);}
+.rank-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--team-color,var(--tq));border-radius:12px 0 0 12px;}
+.rank-pos{display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:rgba(255,255,255,.9);padding:0 8px;}
+.rank-pos.p1{color:var(--gold);text-shadow:0 0 14px rgba(255,215,0,.7);}.rank-pos.p2{color:#C0C0C0;}.rank-pos.p3{color:#CD7F32;}
+.crown-ico{font-size:12px;position:absolute;top:5px;left:32px;}
+.rank-flag{font-size:34px;display:flex;align-items:center;justify-content:center;height:100%;}
+.rank-name{font-size:clamp(14px,2vw,20px);font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#fff;padding:0 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rank-rounds{display:flex;gap:4px;align-items:center;padding:0 10px;flex-wrap:nowrap;}
+.rp{font-size:9px;font-weight:700;padding:3px 7px;border-radius:7px;white-space:nowrap;}
+.rp.win{background:rgba(111,194,186,.25);color:var(--tq2);}.rp.loss{background:rgba(255,54,69,.15);color:rgba(255,110,110,.8);}
+.rp.staff{background:rgba(218,128,229,.18);color:var(--mag);}.rp.pending{background:rgba(255,255,255,.05);color:rgba(255,255,255,.18);}
+.rp.partial{background:rgba(255,215,0,.15);color:var(--gold);}
+.rank-pts-wrap{display:flex;flex-direction:column;align-items:flex-end;padding:0 20px 0 10px;min-width:90px;}
+.rank-pts{font-size:clamp(22px,3vw,32px);font-weight:900;line-height:1;color:var(--team-color,var(--tq));text-shadow:0 0 20px var(--team-color,var(--tq));transition:all .5s cubic-bezier(.34,1.56,.64,1);}
+.rank-pts.bump{transform:scale(1.5);}
+.rank-pts-label{font-size:8px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;}
+.rdot{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:4px 14px;border-radius:14px;border:1.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.2);}
+.rdot.done{background:rgba(111,194,186,.2);border-color:var(--tq);color:var(--tq);}
+.rdot.current{border-color:var(--tq2);color:var(--tq2);animation:rpulse 1.8s infinite;}
+@keyframes rpulse{0%,100%{box-shadow:0 0 0 0 rgba(24,232,192,.3)}50%{box-shadow:0 0 0 6px rgba(24,232,192,0)}}
+.ranking-title{text-align:center;padding:14px 20px 6px;position:relative;z-index:1;}
+.ranking-title h1{font-size:clamp(32px,6vw,60px);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#fff;text-shadow:0 0 40px rgba(0,160,255,.5),0 2px 8px rgba(0,0,0,.8);line-height:1;}
+.ranking-title h1 span{color:var(--tq);text-shadow:0 0 30px rgba(111,194,186,.8);}
+.ranking-sub{font-size:14px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:3px;text-transform:uppercase;margin-top:4px;}
+.round-bar{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px 14px;position:relative;z-index:1;flex-wrap:wrap;}
+.ranking-wrap{flex:1;padding:0 28px 28px;position:relative;z-index:1;display:flex;flex-direction:column;gap:6px;}
+.no-data{text-align:center;padding:60px 20px;color:rgba(255,255,255,.3);font-size:14px;font-weight:600;position:relative;z-index:1;}
+.no-data .nd-icon{font-size:48px;margin-bottom:16px;display:block;opacity:.4;}
+
+body{background:radial-gradient(ellipse at 50% 0%,#0a2a40,#041018 60%,#000);}
+#app{min-height:100vh;display:flex;flex-direction:column;
+  background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(0,80,120,.7),transparent 70%),#041820;}
+#app::before{content:'';position:fixed;top:0;left:0;right:0;height:320px;
+  background:radial-gradient(ellipse 30% 60% at 15% 0%,rgba(0,140,255,.18),transparent 60%),
+             radial-gradient(ellipse 30% 60% at 85% 0%,rgba(0,140,255,.18),transparent 60%);pointer-events:none;z-index:0;}
+.ld{width:8px;height:8px;border-radius:50%;background:var(--red);animation:lp 1.2s infinite;}
+@keyframes lp{0%,100%{box-shadow:0 0 0 0 rgba(255,54,69,.6)}50%{box-shadow:0 0 0 8px rgba(255,54,69,0)}}
+</style>
+</head>
+<body>
+<span class="ball-deco ball-tl">⚽</span>
+<span class="ball-deco ball-tr">⚽</span>
+<div id="app">
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 0 0;position:relative;z-index:1;">
+    <div class="ld"></div>
+    <span style="font-size:11px;font-weight:800;letter-spacing:2px;color:var(--red);text-transform:uppercase;">En vivo</span>
+    <span id="lt" style="font-size:10px;color:var(--gray);margin-left:8px;"></span>
+    <span id="cs" style="font-size:10px;color:#ff3645;margin-left:8px;">⏳ Conectando...</span>
+  </div>
+  <div class="ranking-title"><h1>RANKING <span>FIFA</span> WS</h1><div class="ranking-sub">Evento Anual · We Solve</div></div>
+  <div class="round-bar" id="round-bar"></div>
+  <div class="ranking-wrap" id="ranking-wrap"><div class="no-data"><span class="nd-icon">⚽</span>Conectando con Firebase...</div></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+
+const TEAMS=[
+  {id:'espana',    name:'España',    flag:'🇪🇸', color:'#E74C3C'},
+  {id:'alemania',  name:'Alemania',  flag:'🇩🇪', color:'#2980B9'},
+  {id:'brasil',    name:'Brasil',    flag:'🇧🇷', color:'#27AE60'},
+  {id:'francia',   name:'Francia',   flag:'🇫🇷', color:'#8E44AD'},
+  {id:'mexico',    name:'México',    flag:'🇲🇽', color:'#E67E22'},
+  {id:'canada',    name:'Canadá',    flag:'🇨🇦', color:'#F39C12'},
+  {id:'portugal',  name:'Portugal',  flag:'🇵🇹', color:'#C0392B'},
+  {id:'argentina', name:'Argentina', flag:'🇦🇷', color:'#1ABC9C'},
+];
+const STATION_CONFIG={
+  1:{name:'E1 · Línea del tiempo',type:'normal'},
+  2:{name:'E2 · Accountability',  type:'normal'},
+  3:{name:'E3 · Trabajo en equipo',type:'multi',games:4,label:'Juego'},
+  4:{name:'E4 · Deportiva',        type:'multi',games:2,label:'Juego'},
+};
+const ROUNDS_DATA={
+  R1:{1:{A:['España','Alemania','Brasil','Francia'],   B:['México','Canadá','Portugal','Argentina'], note:'+ Sofi · Diego=STAFF'},
+      2:{A:['España','Alemania','Brasil','Francia'],   B:['México','Canadá','Portugal','Argentina'], note:''},
+      3:{A:['España','Alemania','Brasil','Francia'],   B:['México','Canadá','Portugal','Argentina'], note:''},
+      4:{A:['España','Alemania','Brasil','Francia'],   B:['México','Canadá','Portugal','Argentina'], note:''}},
+  R2:{1:{A:['España','México','Canadá','Portugal'],    B:['Alemania','Brasil','Francia','Argentina'], note:'Lili=STAFF'},
+      2:{A:['España','México','Canadá','Portugal'],    B:['Alemania','Brasil','Francia','Argentina'], note:''},
+      3:{A:['España','México','Canadá','Portugal'],    B:['Alemania','Brasil','Francia','Argentina'], note:''},
+      4:{A:['España','México','Canadá','Portugal'],    B:['Alemania','Brasil','Francia','Argentina'], note:''}},
+  R3:{1:{A:['Alemania','Brasil','Canadá','Argentina'], B:['España','Francia','México','Portugal'],    note:''},
+      2:{A:['Alemania','Brasil','Canadá','Argentina'], B:['España','Francia','México','Portugal'],    note:''},
+      3:{A:['Alemania','Brasil','Canadá','Argentina'], B:['España','Francia','México','Portugal'],    note:''},
+      4:{A:['Alemania','Brasil','Canadá','Argentina'], B:['España','Francia','México','Portugal'],    note:''}},
+  R4:{1:{A:['España','Francia','Portugal','Argentina'],B:['Alemania','Brasil','México','Canadá'],     note:''},
+      2:{A:['España','Francia','Portugal','Argentina'],B:['Alemania','Brasil','México','Canadá'],     note:''},
+      3:{A:['España','Francia','Portugal','Argentina'],B:['Alemania','Brasil','México','Canadá'],     note:''},
+      4:{A:['España','Francia','Portugal','Argentina'],B:['Alemania','Brasil','México','Canadá'],     note:''}},
+};
+function defaultState(){
+  return {points:Object.fromEntries(TEAMS.map(t=>[t.id,0])),history:{},prevRank:Object.fromEntries(TEAMS.map(t=>[t.id,null]))};
+}
+function calcPts(sn,entry){
+  const r={};if(!entry)return r;const cfg=STATION_CONFIG[sn];if(!cfg)return r;
+  if(cfg.type==='normal'){(entry.winner==='A'?entry.teams_a:entry.teams_b||[]).forEach(n=>{const t=TEAMS.find(x=>x.name===n);if(t)r[t.id]=(r[t.id]||0)+1;});}
+  else(entry.games||[]).forEach(g=>{if(!g.winner)return;(g.winner==='A'?entry.teams_a:entry.teams_b||[]).forEach(n=>{const t=TEAMS.find(x=>x.name===n);if(t)r[t.id]=(r[t.id]||0)+1;});});
+  return r;
+}
+let prevRanks={};
+function renderRoundBar(state){
+  const bar=document.getElementById('round-bar');if(!bar)return;
+  bar.innerHTML=['M1','R1','R2','R3','R4'].map(m=>{
+    const keys=m==='M1'?['M1']:[1,2,3,4].map(e=>`${m}-E${e}`);
+    const allDone=keys.every(k=>state.history?.[k]);const anyDone=keys.some(k=>state.history?.[k]);
+    const cls=anyDone?(allDone?'done':'current'):'';
+    return `<div class="rdot ${cls}">${allDone?'✓ ':''}${m}</div>`;
+  }).join('');
+}
+function renderRanking(state,bump){
+  const wrap=document.getElementById('ranking-wrap');if(!wrap)return;
+  const sorted=[...TEAMS].sort((a,b)=>(state.points[b.id]||0)-(state.points[a.id]||0));
+  const cur=Object.fromEntries(sorted.map((t,i)=>[t.id,i+1]));
+  const isFirst=Object.keys(prevRanks).length===0;
+  wrap.innerHTML='';
+  sorted.forEach((team,idx)=>{
+    const pos=idx+1;const pts=state.points[team.id]||0;const pp=prevRanks[team.id]||null;
+    let chg='';
+    if(!isFirst&&pp!==null&&pp!==pos){chg=pp>pos?`<span style="color:#00e676;font-size:12px;font-weight:800;margin-right:6px">▲+${pp-pos}</span>`:`<span style="color:var(--red);font-size:12px;font-weight:800;margin-right:6px">▼-${pos-pp}</span>`;}
+    const pills=['M1','R1','R2','R3','R4'].map(m=>{
+      if(m==='M1'){const h=state.history?.['M1'];if(!h)return '<span class="rp pending">M1</span>';return h.winner===team.id?'<span class="rp win">M1 ✓</span>':'<span class="rp loss">M1</span>';}
+      let w=0,p=0;
+      for(let e=1;e<=4;e++){const h=state.history?.[`${m}-E${e}`];if(!h)continue;const inA=h.teams_a?.includes(team.name),inB=h.teams_b?.includes(team.name);if(!inA&&!inB)continue;const cfg=STATION_CONFIG[e];if(cfg.type==='normal'){p++;if((h.winner==='A'&&inA)||(h.winner==='B'&&inB))w++;}else(h.games||[]).forEach(g=>{if(!g.winner)return;p++;if((g.winner==='A'&&inA)||(g.winner==='B'&&inB))w++;});}
+      if(p===0){if(team.name==='España'&&(m==='R1'||m==='R2'))return `<span class="rp staff">${m} S</span>`;return `<span class="rp pending">${m}</span>`;}
+      if(w===0)return `<span class="rp loss">${m}:0</span>`;
+      if(w===p)return `<span class="rp win">${m}:+${w}</span>`;
+      return `<span class="rp partial">${m}:+${w}</span>`;
+    }).join('');
+    const pc=pos===1?'rank-1':pos===2?'rank-2':pos===3?'rank-3':idx%2===0?'row-even':'row-odd';
+    const pl=pos===1?'p1':pos===2?'p2':pos===3?'p3':'';
+    const row=document.createElement('div');
+    row.className=`rank-row ${pc}`;row.style.setProperty('--team-color',team.color);row.style.animationDelay=`${idx*0.05}s`;
+    row.innerHTML=`${pos===1?'<span class="crown-ico">👑</span>':''}<div class="rank-pos ${pl}">${pos}</div><div class="rank-flag">${team.flag}</div><div class="rank-name">${team.name}</div><div class="rank-rounds">${chg}${pills}</div><div class="rank-pts-wrap"><div class="rank-pts" id="pts-${team.id}">${pts}</div><div class="rank-pts-label">PTS</div></div>`;
+    wrap.appendChild(row);
+    if(bump&&!isFirst){setTimeout(()=>{const el=document.getElementById(`pts-${team.id}`);if(el){el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),500);}},idx*60);}
+  });
+  prevRanks=cur;
+}
+
+firebase.initializeApp({
+  apiKey:"AIzaSyAH7UdCqpa1JoMjV0FdRugkCAVFIC-6WUU",
+  databaseURL:"https://fifa-ws-2026-default-rtdb.firebaseio.com",
+  projectId:"fifa-ws-2026",
+});
+const _db = firebase.database();
+
+_db.ref('.info/connected').on('value', snap=>{
+  const el=document.getElementById('cs');
+  el.textContent = snap.val()===true ? '● Conectado' : '● Sin conexión';
+  el.style.color  = snap.val()===true ? '#00e676' : '#ff3645';
+});
+
+_db.ref('ws_fifa_evento').on('value', snap=>{
+  const state = snap.val();
+  if(!state||Object.values(state.points||{}).every(v=>v===0)){
+    document.getElementById('round-bar').innerHTML='';
+    document.getElementById('ranking-wrap').innerHTML='<div class="no-data"><span class="nd-icon">⚽</span>El evento aún no ha comenzado.<br>¡Pronto aparecerán los resultados!</div>';
+    return;
+  }
+  renderRoundBar(state); renderRanking(state,true);
+});
+
+setInterval(()=>{const el=document.getElementById('lt');if(el)el.textContent=new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});},1000);
+</script>
+</body></html>
