@@ -1,1 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff — FIFA WS</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--tq:#6FC2BA;--tq2:#18E8C0;--gray:#979998;--mag:#DA80E5;--red:#FF3645;--gold:#FFD700;}
+body{font-family:'Montserrat',sans-serif;min-height:100vh;color:#fff;background:linear-gradient(135deg,#041820,#020e14);}
+.sbar{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;background:rgba(0,0,0,.45);border-bottom:1px solid rgba(111,194,186,.12);}
+.btn{padding:9px 20px;border-radius:20px;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.7px;transition:all .2s;text-transform:uppercase;}
+.btn-exp{background:transparent;color:var(--tq);border:1.5px solid var(--tq);}.btn-exp:hover{background:rgba(111,194,186,.1);}
+.btn-rst{background:transparent;color:var(--red);border:1.5px solid rgba(255,54,69,.35);font-size:10px;padding:7px 13px;}.btn-rst:hover{background:rgba(255,54,69,.08);}
+#sp{flex:1;padding:18px 26px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
+.st{font-size:20px;font-weight:800;color:var(--tq);}.ss{font-size:11px;color:var(--gray);margin-top:2px;}
+.mtabs{display:flex;gap:7px;flex-wrap:wrap;}
+.mt{padding:7px 15px;border-radius:15px;border:1.5px solid rgba(111,194,186,.25);background:transparent;color:rgba(255,255,255,.4);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;}
+.mt:hover{border-color:var(--tq);color:var(--tq);}.mt.at{background:var(--tq);border-color:var(--tq);color:#000;}
+.m1p{background:rgba(255,255,255,.04);border:1px solid rgba(111,194,186,.15);border-radius:14px;padding:16px;}
+.m1l{font-size:11px;font-weight:700;color:var(--gray);margin-bottom:12px;letter-spacing:.5px;text-transform:uppercase;}
+.m1g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.m1b{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 6px;border-radius:12px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;}
+.m1b:hover{border-color:var(--tq);background:rgba(111,194,186,.08);}.m1b.sel{border-color:var(--gold);background:rgba(255,215,0,.12);box-shadow:0 0 14px rgba(255,215,0,.2);}
+.mf{font-size:26px;}.mn{font-size:10px;font-weight:700;color:rgba(255,255,255,.8);text-align:center;}.m1b.sel .mn{color:var(--gold);}
+.m1n{font-size:10px;color:var(--gray);margin-top:10px;text-align:center;}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.sc{background:rgba(255,255,255,.04);border:1px solid rgba(111,194,186,.12);border-radius:14px;overflow:hidden;}
+.stb{padding:9px 14px;background:rgba(0,0,0,.35);font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid rgba(111,194,186,.1);display:flex;align-items:center;justify-content:space-between;}
+.bn{font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(111,194,186,.2);color:var(--tq);}
+.bm{font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(255,215,0,.2);color:var(--gold);}
+.gr{display:flex;}
+.gb{flex:1;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;border:none;background:transparent;font-family:'Montserrat',sans-serif;transition:background .2s;position:relative;}
+.gb:hover{background:rgba(111,194,186,.07);}.gb.sw{background:rgba(111,194,186,.16);}
+.gb.sw::after{content:'✓ GANADOR';position:absolute;bottom:5px;font-size:8px;font-weight:800;color:var(--tq2);letter-spacing:1px;}
+.gl{font-size:10px;font-weight:800;padding:3px 10px;border-radius:8px;background:rgba(111,194,186,.15);color:var(--tq);}.gl.b{background:rgba(24,232,192,.12);color:var(--tq2);}
+.gm{font-size:9px;color:rgba(255,255,255,.45);text-align:center;line-height:1.7;}
+.vd{width:1px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;position:relative;}
+.vd::after{content:'VS';font-size:8px;font-weight:800;color:var(--gray);background:rgba(4,24,32,1);padding:4px 2px;position:absolute;}
+.ms{padding:12px;}.md{font-size:10px;color:var(--gray);margin-bottom:10px;text-align:center;}
+.sw-wrap{display:flex;flex-direction:column;gap:7px;}
+.sr{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border-radius:8px;padding:7px 10px;}
+.sl{font-size:10px;font-weight:700;color:rgba(255,255,255,.5);min-width:58px;}
+.sb2{display:flex;gap:6px;flex:1;justify-content:center;}
+.sgb{padding:5px 12px;border-radius:10px;border:1.5px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.4);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all .18s;}
+.sgb:hover{border-color:var(--tq);color:var(--tq);}.sgb.sA.sel{background:rgba(111,194,186,.25);border-color:var(--tq);color:#fff;}
+.sgb.sB.sel{background:rgba(24,232,192,.2);border-color:var(--tq2);color:#fff;}.sgb.sN.sel{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff;}
+.sn{font-size:9px;color:var(--mag);text-align:center;padding:4px 10px 8px;background:rgba(0,0,0,.2);}
+.cr{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:auto;padding-top:8px;}
+.ch{font-size:11px;color:var(--gray);}
+.bc{padding:12px 36px;background:var(--tq);color:#000;font-size:12px;font-weight:800;border-radius:22px;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;}
+.bc:hover{background:var(--tq2);box-shadow:0 0 20px rgba(24,232,192,.4);}.bc:disabled{opacity:.35;cursor:not-allowed;}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--tq);color:#000;padding:10px 28px;border-radius:24px;font-size:12px;font-weight:700;transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:999;pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.err{background:var(--red);color:#fff;}
+#mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;align-items:center;justify-content:center;}
+#mo.open{display:flex;}
+#mb{background:#0a2030;border:1.5px solid var(--tq);border-radius:20px;padding:32px 36px;max-width:400px;width:90%;display:flex;flex-direction:column;gap:16px;}
+#mb h3{font-size:17px;font-weight:800;color:var(--red);}#mb p{font-size:12px;color:rgba(255,255,255,.65);line-height:1.7;}
+.mbtns{display:flex;gap:10px;justify-content:flex-end;}
+.mbc{background:transparent;color:var(--gray);border:1.5px solid rgba(151,153,152,.3);padding:9px 20px;border-radius:16px;font-family:'Montserrat',sans-serif;cursor:pointer;}
+.mbc:hover{border-color:var(--tq);color:var(--tq);}.mbo{background:var(--red);color:#fff;padding:9px 24px;border-radius:16px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;border:none;}
+@keyframes lpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,54,69,.5)}50%{box-shadow:0 0 0 8px rgba(255,54,69,0)}}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="mo"><div id="mb">
+  <h3>⚠️ Reiniciar tablero</h3>
+  <p>Borrará todos los puntos en todos los dispositivos. No se puede deshacer.</p>
+  <div class="mbtns"><button class="mbc" onclick="closeM()">Cancelar</button><button class="mbo" onclick="doReset()">Sí, reiniciar</button></div>
+</div></div>
+<div style="display:flex;flex-direction:column;min-height:100vh;">
+  <div class="sbar">
+    <div style="display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;">
+      <div id="cd" style="width:8px;height:8px;border-radius:50%;background:#ff3645;animation:lpulse 1s infinite;"></div>
+      <span id="cl" style="color:#ff3645;">Conectando a Firebase...</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-exp" onclick="doExport()">📥 Excel</button>
+      <button class="btn btn-rst" onclick="openM()">↺ Reset</button>
+    </div>
+  </div>
+  <div id="sp">
+    <div><div class="st">⚙ Panel de Staff — Registrar Resultados</div><div class="ss">Los cambios se sincronizan en todos los dispositivos al instante</div></div>
+    <div class="mtabs">
+      <button class="mt at" onclick="selMom('M1',this)">M1 · Presentación</button>
+      <button class="mt" onclick="selMom('R1',this)">Ronda 1</button>
+      <button class="mt" onclick="selMom('R2',this)">Ronda 2</button>
+      <button class="mt" onclick="selMom('R3',this)">Ronda 3</button>
+      <button class="mt" onclick="selMom('R4',this)">Ronda 4</button>
+    </div>
+    <div id="sc"></div>
+    <div class="cr"><span class="ch" id="ch">Selecciona un ganador</span><button class="bc" id="bc" disabled onclick="doConfirm()">Confirmar</button></div>
+  </div>
+</div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+
+const TEAMS=[
+  {id:'espana',    name:'España',    flag:'🇪🇸', color:'#E74C3C'},
+  {id:'alemania',  name:'Alemania',  flag:'🇩🇪', color:'#2980B9'},
+  {id:'brasil',    name:'Brasil',    flag:'🇧🇷', color:'#27AE60'},
+  {id:'francia',   name:'Francia',   flag:'🇫🇷', color:'#8E44AD'},
+  {id:'mexico',    name:'México',    flag:'🇲🇽', color:'#E67E22'},
+  {id:'canada',    name:'Canadá',    flag:'🇨🇦', color:'#F39C12'},
+  {id:'portugal',  name:'Portugal',  flag:'🇵🇹', color:'#C0392B'},
+  {id:'argentina', name:'Argentina', flag:'🇦🇷', color:'#1ABC9C'},
+];
+const STATION_CONFIG={
+  1:{name:'E1 · Línea del tiempo',type:'normal'},
+  2:{name:'E2 · Accountability',  type:'normal'},
+  3:{name:'E3 · Trabajo en equipo',type:'multi',games:4,label:'Juego'},
+  4:{name:'E4 · Deportiva',        type:'multi',games:2,label:'Juego'},
+};
+const ROUNDS_DATA={
+  R1:{1:{A:['España','Alemania','Brasil','Francia'],   B:['México','Canadá','Portugal','Argentina'], note:'+ Sofi · Diego=STAFF'},
+      2:{A:['España','Alemania','Brasil','Francia'],   B:['México','Canadá','Portugal','Argentina'], note:''},
+      3:{A:['España','Alemania','Brasil','Francia'],   B:['México','Canadá','Portugal','Argentina'], note:''},
+      4:{A:['España','Alemania','Brasil','Francia'],   B:['México','Canadá','Portugal','Argentina'], note:''}},
+  R2:{1:{A:['España','México','Canadá','Portugal'],    B:['Alemania','Brasil','Francia','Argentina'], note:'Lili=STAFF'},
+      2:{A:['España','México','Canadá','Portugal'],    B:['Alemania','Brasil','Francia','Argentina'], note:''},
+      3:{A:['España','México','Canadá','Portugal'],    B:['Alemania','Brasil','Francia','Argentina'], note:''},
+      4:{A:['España','México','Canadá','Portugal'],    B:['Alemania','Brasil','Francia','Argentina'], note:''}},
+  R3:{1:{A:['Alemania','Brasil','Canadá','Argentina'], B:['España','Francia','México','Portugal'],    note:''},
+      2:{A:['Alemania','Brasil','Canadá','Argentina'], B:['España','Francia','México','Portugal'],    note:''},
+      3:{A:['Alemania','Brasil','Canadá','Argentina'], B:['España','Francia','México','Portugal'],    note:''},
+      4:{A:['Alemania','Brasil','Canadá','Argentina'], B:['España','Francia','México','Portugal'],    note:''}},
+  R4:{1:{A:['España','Francia','Portugal','Argentina'],B:['Alemania','Brasil','México','Canadá'],     note:''},
+      2:{A:['España','Francia','Portugal','Argentina'],B:['Alemania','Brasil','México','Canadá'],     note:''},
+      3:{A:['España','Francia','Portugal','Argentina'],B:['Alemania','Brasil','México','Canadá'],     note:''},
+      4:{A:['España','Francia','Portugal','Argentina'],B:['Alemania','Brasil','México','Canadá'],     note:''}},
+};
+const MOMENT_LABELS={M1:'M1 · Presentación',R1:'Ronda 1',R2:'Ronda 2',R3:'Ronda 3',R4:'Ronda 4'};
+function defaultState(){
+  return {points:Object.fromEntries(TEAMS.map(t=>[t.id,0])),history:{},prevRank:Object.fromEntries(TEAMS.map(t=>[t.id,null]))};
+}
+function calcPts(sn,entry){
+  const r={};if(!entry)return r;const cfg=STATION_CONFIG[sn];if(!cfg)return r;
+  if(cfg.type==='normal'){(entry.winner==='A'?entry.teams_a:entry.teams_b||[]).forEach(n=>{const t=TEAMS.find(x=>x.name===n);if(t)r[t.id]=(r[t.id]||0)+1;});}
+  else(entry.games||[]).forEach(g=>{if(!g.winner)return;(g.winner==='A'?entry.teams_a:entry.teams_b||[]).forEach(n=>{const t=TEAMS.find(x=>x.name===n);if(t)r[t.id]=(r[t.id]||0)+1;});});
+  return r;
+}
+
+
+// ── FIREBASE INIT ─────────────────────────────────────────────────────────────
+const _app = firebase.initializeApp({
+  apiKey: "AIzaSyAH7UdCqpa1JoMjV0FdRugkCAVFIC-6WUU",
+  databaseURL: "https://fifa-ws-2026-default-rtdb.firebaseio.com",
+  projectId: "fifa-ws-2026",
+});
+const _db = firebase.database(_app);
+const _ref = _db.ref('ws_fifa_evento');
+
+let _rs = defaultState();  // always has a valid state, never null
+let am='M1', pw={}, pm={}, m1s=null;
+
+// ── CONNECTION STATUS ─────────────────────────────────────────────────────────
+_db.ref('.info/connected').on('value', snap => {
+  const ok = snap.val() === true;
+  document.getElementById('cd').style.background = ok ? '#00e676' : '#ff3645';
+  document.getElementById('cd').style.animation  = ok ? 'none' : 'lpulse 1s infinite';
+  document.getElementById('cl').textContent = ok
+    ? '● Conectado — sincronizado en tiempo real'
+    : '● Sin conexión — reconectando...';
+  document.getElementById('cl').style.color = ok ? '#00e676' : '#ff3645';
+});
+
+// ── REALTIME LISTENER — always keeps _rs in sync ──────────────────────────────
+_ref.on('value', snap => {
+  const val = snap.val();
+  // If Firebase has data use it; if null/empty (after reset) use defaultState
+  _rs = (val && Object.keys(val).length > 0) ? val : defaultState();
+  renderSC();  // re-render so selections shown match current remote state
+});
+
+// ── FIREBASE SAVE — returns promise, always resolves ─────────────────────────
+function fbSave(data) {
+  return _ref.set(data)
+    .then(() => true)
+    .catch(e => { toast('⚠ Error al guardar: ' + e.message, true); return false; });
+}
+
+// ── CONFIRM RESULTS ───────────────────────────────────────────────────────────
+async function doConfirm() {
+  // Deep copy current remote state (guaranteed to be a valid object)
+  const st = JSON.parse(JSON.stringify(_rs));
+
+  // Ensure required keys exist (safety after a reset)
+  if (!st.points)   st.points   = Object.fromEntries(TEAMS.map(t => [t.id, 0]));
+  if (!st.history)  st.history  = {};
+  if (!st.prevRank) st.prevRank = Object.fromEntries(TEAMS.map(t => [t.id, null]));
+
+  // Save prev rank for change arrows
+  const sb = [...TEAMS].sort((a,b) => (st.points[b.id]||0) - (st.points[a.id]||0));
+  st.prevRank = Object.fromEntries(sb.map((t,i) => [t.id, i+1]));
+
+  if (am === 'M1') {
+    const old = st.history['M1'];
+    if (old) {
+      const t = TEAMS.find(x => x.id === old.winner);
+      if (t) st.points[t.id] = Math.max(0, (st.points[t.id]||0) - 1);
+    }
+    st.history['M1'] = { winner: pw['M1'] };
+    const t = TEAMS.find(x => x.id === pw['M1']);
+    if (t) st.points[t.id] = (st.points[t.id]||0) + 1;
+  } else {
+    for (let e = 1; e <= 4; e++) {
+      const k = `${am}-E${e}`;
+      const old = st.history[k];
+      if (old) {
+        const p = calcPts(e, old);
+        Object.entries(p).forEach(([id,v]) => { st.points[id] = Math.max(0, (st.points[id]||0) - v); });
+      }
+      const cfg = STATION_CONFIG[e];
+      const d   = ROUNDS_DATA[am][e];
+      if (cfg.type === 'normal') {
+        if (!pw[k]) continue;
+        const en = { winner: pw[k], teams_a: d.A, teams_b: d.B };
+        st.history[k] = en;
+        const p = calcPts(e, en);
+        Object.entries(p).forEach(([id,v]) => { st.points[id] = (st.points[id]||0) + v; });
+      } else {
+        if (!pm[k] || !pm[k].some(v => v !== null)) continue;
+        const en = { games: pm[k].map(w => ({ winner: w })), teams_a: d.A, teams_b: d.B };
+        st.history[k] = en;
+        const p = calcPts(e, en);
+        Object.entries(p).forEach(([id,v]) => { st.points[id] = (st.points[id]||0) + v; });
+      }
+    }
+  }
+
+  const ok = await fbSave(st);
+  if (ok) toast('✓ Guardado y sincronizado');
+}
+
+// ── RESET ─────────────────────────────────────────────────────────────────────
+async function doReset() {
+  const ok = await fbSave(defaultState());
+  if (ok) { closeM(); toast('Tablero reiniciado'); }
+}
+
+// ── RENDER STAFF CONTENT ──────────────────────────────────────────────────────
+function renderSC() {
+  const rs = _rs;
+  const div = document.getElementById('sc');
+  pw = {}; pm = {}; m1s = null;
+
+  if (am === 'M1') {
+    const ex = rs.history?.['M1'];
+    div.innerHTML = `<div class="m1p">
+      <div class="m1l">Momento 1 · Presentación — Selecciona el equipo ganador</div>
+      <div class="m1g">${TEAMS.map(t => `
+        <button class="m1b ${ex?.winner===t.id?'sel':''}" id="m1-${t.id}" onclick="selM1('${t.id}')">
+          <span class="mf">${t.flag}</span><span class="mn">${t.name}</span>
+        </button>`).join('')}
+      </div>
+      <div class="m1n">Solo 1 selección gana este momento.</div>
+    </div>`;
+    if (ex) { m1s = ex.winner; pw['M1'] = ex.winner; }
+  } else {
+    const rd = ROUNDS_DATA[am];
+    div.innerHTML = `<div class="sgrid">${[1,2,3,4].map(e => {
+      const k   = `${am}-E${e}`;
+      const ex  = rs.history?.[k];
+      const d   = rd[e];
+      const cfg = STATION_CONFIG[e];
+      if (cfg.type === 'normal') {
+        if (ex) pw[k] = ex.winner;
+        return `<div class="sc">
+          <div class="stb">${cfg.name}<span class="bn">1 ganador</span></div>
+          <div class="gr">
+            <button class="gb ${ex?.winner==='A'?'sw':''}" id="b-${k}-A" onclick="selW('${k}','A')">
+              <span class="gl">GRUPO A</span><div class="gm">${d.A.join(' · ')}</div>
+            </button>
+            <div class="vd"></div>
+            <button class="gb ${ex?.winner==='B'?'sw':''}" id="b-${k}-B" onclick="selW('${k}','B')">
+              <span class="gl b">GRUPO B</span><div class="gm">${d.B.join(' · ')}</div>
+            </button>
+          </div>
+          ${d.note ? `<div class="sn">⚡ ${d.note}</div>` : ''}
+        </div>`;
+      } else {
+        pm[k] = (ex?.games || Array(cfg.games).fill(null)).map(g => g?.winner || null);
+        return `<div class="sc">
+          <div class="stb">${cfg.name}<span class="bm">${cfg.games} juegos</span></div>
+          <div class="ms">
+            <div class="md">A: ${d.A.join(' · ')}<br>B: ${d.B.join(' · ')}</div>
+            <div class="sw-wrap">${Array.from({length:cfg.games}, (_,g) => {
+              const c = pm[k][g];
+              return `<div class="sr">
+                <div class="sl">${cfg.label} ${g+1}</div>
+                <div class="sb2">
+                  <button class="sgb sA ${c==='A'?'sel':''}" onclick="selSG('${k}',${g},'A')">Grupo A</button>
+                  <button class="sgb sN ${c===null?'sel':''}" onclick="selSG('${k}',${g},null)">—</button>
+                  <button class="sgb sB ${c==='B'?'sel':''}" onclick="selSG('${k}',${g},'B')">Grupo B</button>
+                </div>
+              </div>`;
+            }).join('')}</div>
+          </div>
+          ${d.note ? `<div class="sn">⚡ ${d.note}</div>` : ''}
+        </div>`;
+      }
+    }).join('')}</div>`;
+  }
+  updBtn();
+}
+
+function selM1(id) {
+  m1s = id; pw = {'M1': id};
+  document.querySelectorAll('.m1b').forEach(b => b.classList.remove('sel'));
+  document.getElementById(`m1-${id}`)?.classList.add('sel');
+  updBtn();
+}
+function selW(k, s) {
+  if (pw[k] === s) delete pw[k]; else pw[k] = s;
+  document.getElementById(`b-${k}-A`)?.classList.toggle('sw', pw[k]==='A');
+  document.getElementById(`b-${k}-B`)?.classList.toggle('sw', pw[k]==='B');
+  updBtn();
+}
+function selSG(k, g, s) {
+  pm[k][g] = s;
+  document.querySelectorAll(`[onclick*="selSG('${k}',${g}"]`).forEach(b => {
+    b.classList.remove('sel');
+    if (b.classList.contains('sA') && s==='A') b.classList.add('sel');
+    if (b.classList.contains('sB') && s==='B') b.classList.add('sel');
+    if (b.classList.contains('sN') && s===null) b.classList.add('sel');
+  });
+  updBtn();
+}
+function updBtn() {
+  const ha = am==='M1' ? !!m1s
+    : Object.keys(pw).length > 0 || Object.values(pm).some(a => a.some(v => v!==null));
+  document.getElementById('bc').disabled = !ha;
+  const done = Object.keys(pw).length + Object.entries(pm).filter(([,a]) => a.some(v=>v!==null)).length;
+  document.getElementById('ch').textContent = !ha
+    ? 'Selecciona al menos un resultado'
+    : am==='M1'
+      ? `✓ ${TEAMS.find(t=>t.id===m1s)?.name} seleccionado`
+      : done < 4 ? `${done} de 4 estaciones` : '✓ Las 4 estaciones registradas';
+}
+function selMom(m, el) {
+  am = m;
+  document.querySelectorAll('.mt').forEach(b => b.classList.remove('at'));
+  el.classList.add('at');
+  renderSC();
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function doExport() {
+  const st = _rs;
+  const sorted = [...TEAMS].sort((a,b) => (st.points[b.id]||0) - (st.points[a.id]||0));
+  const hd = [];
+  ['R1','R2','R3','R4'].forEach(r => [1,2,3,4].forEach(e => {
+    const c = STATION_CONFIG[e];
+    if (c.type==='normal') hd.push(`${r} ${c.name}`);
+    else for (let g=1;g<=c.games;g++) hd.push(`${r} ${c.name} J${g}`);
+  }));
+  let rows = [['RANKING FIFA — EVENTO WS'],[''],['POS','SELECCIÓN','PTS','M1',...hd]];
+  sorted.forEach((t,i) => {
+    const row = [i+1, `${t.flag} ${t.name}`, st.points[t.id]||0];
+    const m1 = st.history?.['M1'];
+    row.push(m1 ? (m1.winner===t.id ? 'GANÓ' : 'PERDIÓ') : 'Pendiente');
+    ['R1','R2','R3','R4'].forEach(r => [1,2,3,4].forEach(e => {
+      const h = st.history?.[`${r}-E${e}`];
+      const c = STATION_CONFIG[e];
+      if (!h) { row.push(...Array(c.type==='normal'?1:c.games).fill('Pendiente')); return; }
+      const iA = h.teams_a?.includes(t.name), iB = h.teams_b?.includes(t.name);
+      if (!iA && !iB) { row.push(...Array(c.type==='normal'?1:c.games).fill('—')); return; }
+      if (c.type==='normal')
+        row.push(((h.winner==='A'&&iA)||(h.winner==='B'&&iB)) ? 'GANÓ' : 'PERDIÓ');
+      else
+        (h.games||[]).forEach(g => {
+          row.push(g.winner ? (((g.winner==='A'&&iA)||(g.winner==='B'&&iB)) ? 'GANÓ' : 'PERDIÓ') : '—');
+        });
+    }));
+    rows.push(row.flat());
+  });
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const b = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b);
+  a.download = 'ranking_fifa_ws.csv'; a.click();
+  toast('📥 Exportado');
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function toast(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = err ? 'err' : '';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+function openM()  { document.getElementById('mo').classList.add('open'); }
+function closeM() { document.getElementById('mo').classList.remove('open'); }
+</script>
+</body>
+</html>
